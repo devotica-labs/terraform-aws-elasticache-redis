@@ -8,6 +8,13 @@ Releases are cut automatically by `release-please` on merge to `main`,
 driven by Conventional Commit prefixes (`feat:` → minor, `fix:`/`docs:`/`chore:` → patch,
 `feat!:` or `BREAKING CHANGE:` footer → major).
 
+## 0.1.0 (2026-06-22)
+
+
+### Features
+
+* native ElastiCache for Redis module (fintech-hardened, HA by default) ([7c6c655](https://github.com/devotica-labs/terraform-aws-elasticache-redis/commit/7c6c655bcda2712e36724f4e2acedc9842fb63b2))
+
 ## [Unreleased]
 
 ### Added
