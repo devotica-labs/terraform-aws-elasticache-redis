@@ -1,0 +1,13 @@
+# Trivy/tfsec ignores for terraform-aws-elasticache-redis. AVD-prefixed IDs
+# (required when a resource is scanned through a module call) + justification.
+
+# AVD-AWS-0104 — "Security group rule allows unrestricted egress to any IP".
+#
+# Intentional for the cache security group created by this module: ElastiCache
+# nodes need outbound for cross-AZ replication, KMS (at-rest key), and
+# CloudWatch metrics. Locking egress to an enumerated allow-list would require
+# VPC endpoints for every dependency — out of scope for a cache module.
+# Inbound IS restricted to the configured source security groups / CIDRs.
+#
+# Defined at: main.tf  resource "aws_vpc_security_group_egress_rule" "all"
+AVD-AWS-0104

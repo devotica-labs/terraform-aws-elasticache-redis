@@ -1,0 +1,39 @@
+name: Integration Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type 'run' to create a REAL ElastiCache cluster (slow + costs money)."
+        required: true
+      subnet_id_a:
+        description: "Private subnet ID in AZ a."
+        required: true
+      subnet_id_b:
+        description: "Private subnet ID in AZ b."
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  integration:
+    name: terraform test (integration)
+    if: github.event.inputs.confirm == 'run'
+    runs-on: ubuntu-latest
+    environment: sandbox
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v4
+        with: { terraform_version: "1.9.5" }
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_OIDC_ROLE_ARN }}
+          aws-region: ap-south-1
+      - run: terraform init
+      - name: terraform test (integration)
+        env:
+          TF_VAR_subnet_ids: '["${{ inputs.subnet_id_a }}","${{ inputs.subnet_id_b }}"]'
+        run: terraform test -filter=tests/integration.tftest.hcl
